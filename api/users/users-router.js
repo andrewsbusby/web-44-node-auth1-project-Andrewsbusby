@@ -3,14 +3,14 @@ const router = require('express').Router()
 const User = require('./users-model');
 const { restricted } = require('../auth/auth-middleware');
 
-router.get('/', restricted, (req, res, next) => {//eslint-disable-line
-  User.find()
-    .then(users => {
-      res.status(200).json(users)
-    })
-    .catch(err => { //eslint-disable-line
-      res.status(401).json({ message: 'You shall not pass!'})
-    })
+router.get('/', restricted, async (req, res, next) => {//eslint-disable-line
+  try{
+    const user = await User.find()
+    res.json(user);
+  }
+  catch(err) {
+    next(err)
+  }
 })
 
 module.exports = router;
