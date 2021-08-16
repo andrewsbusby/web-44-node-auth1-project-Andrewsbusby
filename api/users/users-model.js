@@ -2,22 +2,23 @@
 const db = require('../../data/db-config');
 
 function find() {
-  return db('users')
+  return db('users').select('user_id', 'username')
 }
 
 
 function findBy(filter) {
-  return db('users').where('filter', filter).first()
+  return db('users').where('filter', filter)
 }
 
 
 function findById(user_id) {
-  return db('users').where('user_id', user_id).first()
+  return db('users').select('user_id', 'username').where('user_id', user_id).first()
 }
 
 
-function add(user) {
-  db('users').insert(user).then(([id]) => findById(id))
+async function add(user) {
+  const [id] = await db('users').insert(user)
+  return findById(id)
 }
 
 module.exports = {
