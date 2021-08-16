@@ -1,3 +1,4 @@
+const User = require('../users/users-model');
 
 function restricted(req, res, next) {
   if (req.session.user) {
@@ -15,8 +16,19 @@ function restricted(req, res, next) {
     "message": "Username taken"
   }
 */
-function checkUsernameFree() {
-
+async function checkUsernameFree(req, res, next) {
+  try{
+    const exists = await User.findBy(req.body.username)
+    if(!exists) {
+      console.log(exists)
+      next()
+    } else {
+      next({ status: 422, message: 'Username taken'})
+    }
+  }
+  catch(err){
+    next(err)
+  }
 }
 
 /*
